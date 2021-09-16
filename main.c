@@ -1,0 +1,13 @@
+
+#include <stdlib.h>
+#include "matrix.h"
+
+int main() {
+
+    matrix4x4 rotation = create_identity();
+    rotate_x(&rotation, 45.0f);
+
+    print_matrix(NULL);
+
+    return 0;
+}
