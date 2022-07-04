@@ -1,9 +1,9 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/donut.dir/main.c.obj"
-  "CMakeFiles/donut.dir/matrix.c.obj"
-  "donut.exe"
-  "donut.exe.manifest"
-  "donut.lib"
+  "CMakeFiles/donut.dir/main.c.o"
+  "CMakeFiles/donut.dir/main.c.o.d"
+  "CMakeFiles/donut.dir/matrix.c.o"
+  "CMakeFiles/donut.dir/matrix.c.o.d"
+  "donut"
   "donut.pdb"
 )
 

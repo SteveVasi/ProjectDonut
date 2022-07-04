@@ -4,21 +4,12 @@ set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
 
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "C"
-  )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_C
-  "C:/Users/stefa/CLionProjects/donut/main.c" "C:/Users/stefa/CLionProjects/donut/cmake-build-debug/CMakeFiles/donut.dir/main.c.obj"
-  "C:/Users/stefa/CLionProjects/donut/matrix.c" "C:/Users/stefa/CLionProjects/donut/cmake-build-debug/CMakeFiles/donut.dir/matrix.c.obj"
-  )
-set(CMAKE_C_COMPILER_ID "MSVC")
-
-# The include file search paths:
-set(CMAKE_C_TARGET_INCLUDE_PATH
   )
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/stefan/programming/donut/main.c" "CMakeFiles/donut.dir/main.c.o" "gcc" "CMakeFiles/donut.dir/main.c.o.d"
+  "/home/stefan/programming/donut/matrix.c" "CMakeFiles/donut.dir/matrix.c.o" "gcc" "CMakeFiles/donut.dir/matrix.c.o.d"
   )
 
 # Targets to which this target links.
