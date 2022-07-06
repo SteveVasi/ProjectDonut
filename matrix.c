@@ -5,8 +5,13 @@
 #include <stdio.h>
 #include <math.h>
 
+#define sinf(x) ((float)sin((double) x))
+#define cosf(x) ((float)cos((double) x))
+#define tanf(x) (float)tan((double)x)
+
+
 // additive identity
-matrix4x4 create_zero_matrix(){
+matrix4x4 create_zero_matrix() {
     matrix4x4 identity;
     memset(identity.data, 0, sizeof(identity.data));
     return identity;
@@ -25,13 +30,12 @@ matrix4x4 create_identity() {
 }
 
 
-
-int getIndex(int x, int y){
+int getIndex(int x, int y) {
     return x + y * 4;
 }
 
 
-matrix4x4 m_times_n(matrix4x4* m, matrix4x4* n){
+matrix4x4 m_times_n(matrix4x4 *m, matrix4x4 *n) {
     matrix4x4 helper = create_zero_matrix();
 
     // row times column
@@ -43,7 +47,7 @@ matrix4x4 m_times_n(matrix4x4* m, matrix4x4* n){
 
     for (int y = 0; y < 4; ++y) {
         for (int x = 0; x < 4; ++x) {
-            helper.data[getIndex(x, y)] = m->data[4*y + x] * n->data[4*x + y];
+            helper.data[getIndex(x, y)] = m->data[4 * y + x] * n->data[4 * x + y];
         }
     }
 
@@ -51,13 +55,13 @@ matrix4x4 m_times_n(matrix4x4* m, matrix4x4* n){
 }
 
 //sinf, cosf
-void rotate_x(matrix4x4* matrix, float degree) {
+void rotate_x(matrix4x4 *matrix, float degree) {
     matrix4x4 rotational = create_identity();
 
-    rotational.data[getIndex(1,1)] = cosf(degree);
-    rotational.data[getIndex(2,1)] = -sinf(degree);
-    rotational.data[getIndex(1,3)] = sinf(degree);
-    rotational.data[getIndex(3,3)] = cosf(degree);
+    rotational.data[getIndex(1, 1)] = cosf(degree);
+    rotational.data[getIndex(2, 1)] = -sinf(degree);
+    rotational.data[getIndex(1, 3)] = sinf(degree);
+    rotational.data[getIndex(3, 3)] = cosf(degree);
 
     *matrix = m_times_n(matrix, &rotational);
 
@@ -65,9 +69,8 @@ void rotate_x(matrix4x4* matrix, float degree) {
 }
 
 
-
 void print_matrix(matrix4x4 *matrix) {
-    if(matrix == NULL)
+    if (matrix == NULL)
         return;
 
     printf("-----------------------------\n");
