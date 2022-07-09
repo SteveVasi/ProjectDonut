@@ -4,6 +4,7 @@
 
 typedef struct matrix4x4_t {
     float data[16];
+    //float data[4][4];
 } matrix4x4;
 
 matrix4x4 create_identity();

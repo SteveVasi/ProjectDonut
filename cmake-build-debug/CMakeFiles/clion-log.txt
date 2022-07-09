@@ -1,4 +1,4 @@
-/home/stefan/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/221.5591.52/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/stefan/programming/donut -B /home/stefan/programming/donut/cmake-build-debug
+/home/stefan/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/221.5921.27/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/stefan/programming/donut -B /home/stefan/programming/donut/cmake-build-debug
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/stefan/programming/donut/cmake-build-debug

@@ -44,10 +44,19 @@ matrix4x4 m_times_n(matrix4x4 *m, matrix4x4 *n) {
     // maybe make function to get vector of length 4
 
     // TODO make this work
-
+/*
     for (int y = 0; y < 4; ++y) {
         for (int x = 0; x < 4; ++x) {
             helper.data[getIndex(x, y)] = m->data[4 * y + x] * n->data[4 * x + y];
+        }
+    }
+    */
+
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            for (int k = 0; k < 4; ++k) {
+                helper.data[getIndex(j,i)] += m->data[getIndex(k,i)] * n->data[getIndex(j,k)];
+            }
         }
     }
 
