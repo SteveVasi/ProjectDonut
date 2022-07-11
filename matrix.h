@@ -10,11 +10,13 @@ typedef struct matrix4x4_t {
 
 // no side effects, pure functions
 matrix4x4 create_identity();
+matrix4x4 create_zero_matrix();
 matrix4x4 rotate(float x_degree, float y_degree, float z_degree);
 matrix4x4 rotate_x(float degree);
 matrix4x4 rotate_y(float degree);
 matrix4x4 rotate_z(float degree);
 matrix4x4 m_times_n(matrix4x4* m, matrix4x4* n);
+matrix4x4 m_plus_n(matrix4x4* m, matrix4x4* n);
 
 
 void print_matrix(matrix4x4* matrix);
