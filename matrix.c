@@ -25,6 +25,24 @@ matrix4x4 create_identity() {
     return identity;
 }
 
+void print_matrix(matrix4x4 *matrix) {
+    if (matrix == NULL)
+        return;
+
+    printf("-----------------------------\n");
+    for (int i = 0; i < 4; ++i) {
+        printf("| %.2f | %.2f | %.2f | %.2f |\n",
+               matrix->data[i][0],             // (*matrix).data[i] == matrix->data[i]
+               matrix->data[i][1],
+               matrix->data[i][2],
+               matrix->data[i][3]);
+        printf("-----------------------------\n");
+    }
+
+}
+
+// Operations on matrices
+
 matrix4x4 m_times_n(matrix4x4 *m, matrix4x4 *n) {
     matrix4x4 helper = create_zero_matrix();
 
@@ -47,7 +65,7 @@ matrix4x4 m_plus_n(matrix4x4* m, matrix4x4* n){
 }
 
 
-
+// transformational matrices
 
 matrix4x4 rotate_x(float degree) {
     matrix4x4 rotational = create_identity();
@@ -93,7 +111,7 @@ matrix4x4 rotate(float x_degree, float y_degree, float z_degree){
 }
 
 
-matrix4x4 translate_xyz(matrix4x4 *matrix4X4, float x, float y, float z) {
+matrix4x4 translate(matrix4x4 *matrix4X4, float x, float y, float z) {
     matrix4x4 translator = create_identity();
 
     translator.data[0][3] = x;
@@ -103,7 +121,7 @@ matrix4x4 translate_xyz(matrix4x4 *matrix4X4, float x, float y, float z) {
     return translator;
 }
 
-matrix4x4 scale_xyz(matrix4x4 *matrix4X4, float x, float y, float z) {
+matrix4x4 scale(matrix4x4 *matrix4X4, float x, float y, float z) {
     matrix4x4 scaler = create_identity();
 
     scaler.data[0][0] = x;
@@ -113,18 +131,3 @@ matrix4x4 scale_xyz(matrix4x4 *matrix4X4, float x, float y, float z) {
     return scaler;
 }
 
-void print_matrix(matrix4x4 *matrix) {
-    if (matrix == NULL)
-        return;
-
-    printf("-----------------------------\n");
-    for (int i = 0; i < 4; ++i) {
-        printf("| %.2f | %.2f | %.2f | %.2f |\n",
-               matrix->data[i][0],             // (*matrix).data[i] == matrix->data[i]
-               matrix->data[i][1],
-               matrix->data[i][2],
-               matrix->data[i][3]);
-        printf("-----------------------------\n");
-    }
-
-}
