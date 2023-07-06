@@ -5,4 +5,4 @@ set(CMAKE_C_STANDARD 99)
 
 add_executable(donut main.c matrix.h matrix.c)
 
-target_link_libraries(donut m)
+target_link_libraries(donut)

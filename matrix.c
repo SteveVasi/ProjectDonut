@@ -1,6 +1,5 @@
 
 #include "matrix.h"
-
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
@@ -111,7 +110,7 @@ matrix4x4 rotate(float x_degree, float y_degree, float z_degree){
 }
 
 
-matrix4x4 translate(matrix4x4 *matrix4X4, float x, float y, float z) {
+matrix4x4 translate(float x, float y, float z) {
     matrix4x4 translator = create_identity();
 
     translator.data[0][3] = x;

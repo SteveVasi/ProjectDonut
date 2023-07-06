@@ -1,40 +1,29 @@
-
-#include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "matrix.h"
 
 
-// a circle of radius R1 centered at R2
-const float R1 = 1;
-const float R2 = 1;
-
-
-// distance from the viewer to donut
-const float K2 = 5;
-
-
-const int THETA_SPACING = 4;
-const int PHI_SPACING = 1;
-const int ROTATION_SPEED_A = 4;
-const int ROTATION_SPEED_B = 2;
-
-
-
-
-const int SCREEN_WIDTH = 30;
-const int SCREEN_HEIGHT = 30;
-
-
-
-
-
-// distance from eye to screen aka z'
-const float K1 = ((float) SCREEN_WIDTH) * 3.0f / (8.0f*(R1+R2));
-
-
 int main() {
+
+    // a circle of radius R1 centered at R2
+    const float R1 = 1;
+    const float R2 = 1;
+
+    // distance from the viewer to donut
+    const float K2 = 5;
+
+    const int THETA_SPACING = 4;
+    const int PHI_SPACING = 1;
+    const int ROTATION_SPEED_A = 4;
+    const int ROTATION_SPEED_B = 2;
+
+    const int SCREEN_WIDTH = 30;
+    const int SCREEN_HEIGHT = 30;
+
+    // distance from eye to screen aka z'
+    const float K1 = ((float) SCREEN_WIDTH) * 3.0f / (8.0f * (R1 + R2));
 
     // rotation
     int A = 55;
@@ -43,14 +32,15 @@ int main() {
 
     // reciprocal z buffer (z⁽⁻¹⁾)
     // 0 means infinitely far away
-    float z_buff[SCREEN_HEIGHT][SCREEN_WIDTH];
-    char out_buff[SCREEN_HEIGHT][SCREEN_WIDTH];
+    float **z_buff = (float **) malloc(SCREEN_HEIGHT * sizeof(float *));
+    char **out_buff = (char **) malloc(SCREEN_HEIGHT * sizeof(char *));
 
-    memset(z_buff, 0, sizeof(float) * SCREEN_HEIGHT * SCREEN_WIDTH);
-    memset(out_buff, ' ', sizeof(char) * SCREEN_HEIGHT * SCREEN_WIDTH);
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
+        z_buff[i] = (float *) malloc(SCREEN_WIDTH * sizeof(float));
+        out_buff[i] = (char *) malloc(SCREEN_WIDTH * sizeof(char));
+    }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "EndlessLoop"
+
     while (1) {
 
         A += ROTATION_SPEED_A;
@@ -62,9 +52,9 @@ int main() {
             float theta = (float) _t;
 
 
-            float circleX = R2 + R1 * cosf( theta);
-            float circleY = R1 * sinf( theta);
-            float circleZ = 0;
+            float circleX = R2 + R1 * cosf(theta);
+            float circleY = R1 * sinf(theta);
+            float circleZ = 0; // never used but for
 
             matrix4x4 torus = create_zero_matrix();
             torus.data[0][0] = circleX;
@@ -87,8 +77,8 @@ int main() {
 
                 // x and y projection
 
-                int xp = K1 * x / (K2 + z);
-                int yp = (int) ((float)SCREEN_HEIGHT - K1 * y / (K2 + z));
+                int xp = (int) (K1 * x / (K2 + z));
+                int yp = (int) ( SCREEN_HEIGHT - 1 - (int)(K1 * y / (K2 + z)));
 
                 // create surface normal
                 matrix4x4 surface_normal = create_zero_matrix();
@@ -102,16 +92,16 @@ int main() {
                 light.data[2][0] = -0.70710678118f;
 
                 float luminance = m_times_n(&surface_normal, &light).data[0][0];
+                int isInBounds = xp >= 0 && xp < SCREEN_WIDTH && yp >= 0 && yp < SCREEN_HEIGHT && xp >= 0 && xp < SCREEN_WIDTH && yp >= 0 && yp < SCREEN_HEIGHT;
 
-                if (luminance > 0) {
+
+                if (luminance > 0 && isInBounds == 1) {
                     //print_matrix(&xyz);
-                    if (1/z > z_buff[yp][xp]) {
+                    if (1 / z > z_buff[xp][yp]) {
                         int luminance_index = (int) (10.0f * luminance);
-                        out_buff[yp][xp] = ".,.~:;=!#$@"[luminance_index];
+                        out_buff[xp][yp] = ".,.~:;=!#$@"[luminance_index];
                     }
                 }
-
-
 
             }
 
@@ -122,8 +112,9 @@ int main() {
                 }
                 putchar('\n');
             }
-            //break;
         }
+
+
 
         // spin the donut around the x and z axes
 
@@ -133,6 +124,13 @@ int main() {
 
         // ASCII luminance: .,.~:;=!#$@
     }
-#pragma clang diagnostic pop
-    return 0;
+
+
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
+        free(z_buff[i]);
+        free(out_buff[i]);
+    }
+
+    free(z_buff);
+    free(out_buff);
 }
