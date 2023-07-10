@@ -13,18 +13,18 @@ int main() {
     const float R2 = 1;
 
     // distance from the viewer to donut
-    const float K2 = 5;
+    const float K2 = 10;
 
     const int THETA_SPACING = 4;
     const int PHI_SPACING = 1;
     const int ROTATION_SPEED_A = 4;
     const int ROTATION_SPEED_B = 2;
 
-    static const int SCREEN_WIDTH = 16 * 10;  // x
-    static const int SCREEN_HEIGHT = 9 * 10; // y
+    static const int SCREEN_WIDTH = 15 * 3;  // x
+    static const int SCREEN_HEIGHT = 15; // y
 
     // distance from eye to screen aka z'
-    const float K1 = ((float) SCREEN_WIDTH) * 3.0f / (8.0f * (R1 + R2));
+    const float K1 = ((float) SCREEN_WIDTH) * K2 * 3.0f / (8.0f * (R1 + R2));
 
     // rotation
     int A = 55;
@@ -41,11 +41,16 @@ int main() {
         z_buff[i] = (float *) malloc(SCREEN_WIDTH * sizeof(float));
         out_buff[i] = (char *) malloc(SCREEN_WIDTH * sizeof(char));
         memset(z_buff[i], 0, SCREEN_WIDTH * sizeof(float));
-        memset(out_buff[i], '-', SCREEN_WIDTH * sizeof(char));
+        memset(out_buff[i], ' ', SCREEN_WIDTH * sizeof(char));
     }
 
 
     while (1) {
+
+        for (int i = 0; i < SCREEN_HEIGHT; ++i) {
+            memset(z_buff[i], 0, SCREEN_WIDTH * sizeof(float));
+            memset(out_buff[i], ' ', SCREEN_WIDTH * sizeof(char));
+        }
 
         A += ROTATION_SPEED_A;
         B += ROTATION_SPEED_B;
@@ -76,11 +81,12 @@ int main() {
                 float x = xyz.data[0][0];
                 float y = xyz.data[0][1];
                 float z = xyz.data[0][2];
+                float ooz = 1 / z;
 
                 // x and y projection
 
-                int xp = (int) (K1 * x / (K2 + z));
-                int yp = (SCREEN_HEIGHT - 1 - (int) (K1 * y / (K2 + z)));
+                int xp = (int) ((float)SCREEN_WIDTH / 2 + K1 * ooz * x);
+                int yp = (SCREEN_HEIGHT / 2 - 1 - (int) (K1 * ooz * y));
 
                 // create surface normal
                 matrix4x4 surface_normal = create_zero_matrix();
@@ -95,12 +101,12 @@ int main() {
 
                 float luminance = m_times_n(&surface_normal, &light).data[0][0];
                 int isInBounds = xp >= 0 && xp < SCREEN_WIDTH && yp >= 0 && yp < SCREEN_HEIGHT;
-                int isNearest = isInBounds ? (z > z_buff[xp][yp]) : 0;
+                int isNearest = isInBounds ? (z > z_buff[yp][xp]) : 0;
 
 
                 if (luminance > 0 && isInBounds && isNearest) {
                     int luminance_index = (int) (10.0f * luminance);
-                    out_buff[xp][yp] = ".,.~:;=!#$@"[luminance_index];
+                    out_buff[yp][xp] = ".,.~:;=!#$@"[luminance_index];
                 }
 
             }
@@ -108,7 +114,6 @@ int main() {
         }
 
         printf("\x1b[H");
-        printf("===================\n");
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
                 putchar(out_buff[i][j]);
