@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
+#include <unistd.h>
 #include "matrix.h"
 
 
@@ -122,7 +122,7 @@ int main() {
         }
 
 
-        Sleep(1000);
+        sleep(1000);
     }
 
 
