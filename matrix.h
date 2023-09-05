@@ -8,7 +8,7 @@ typedef struct matrix4x4_t {
 } matrix4x4;
 
 
-// no side effects, pure functions
+// no side effects
 matrix4x4 create_identity();
 matrix4x4 create_zero_matrix();
 matrix4x4 rotate(float x_degree, float y_degree, float z_degree);

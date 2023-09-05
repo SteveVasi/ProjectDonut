@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "matrix.h"
+#include "z_buffer.h"
 
 
 int main() {
@@ -36,6 +37,7 @@ int main() {
     float **z_buff = (float **) malloc(SCREEN_HEIGHT * sizeof(float *));
     char **out_buff = (char **) malloc(SCREEN_HEIGHT * sizeof(char *));
 
+    z_buffer zBuffer = initialize_buffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     for (int i = 0; i < SCREEN_HEIGHT; ++i) {
         z_buff[i] = (float *) malloc(SCREEN_WIDTH * sizeof(float));
