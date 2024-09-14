@@ -98,11 +98,11 @@ int main() {
                 light.data[2][0] = -0.70710678118f;
 
                 float luminance = getLuminance(&surface_normal, &light);
-                int hasLight = hasLight(&surface_normal, &light);
+                int hasLightInScene = hasLight(&surface_normal, &light);
 
 
                 vector3_int point = {.x = projection.x, .y = projection.y, .z = torusSurface.z};
-                if (hasLight && isInBounds(&point, &screen) && isClosest(&point, &screen)) {
+                if (hasLightInScene && isInBounds(&point, &screen) && isClosest(&point, &screen)) {
                     int luminance_index = (int) (10.0f * luminance);
                     screen.frame_buffer.buffer[projection.y][projection.x] = ".,.~:;=!#$@"[luminance_index];
                 }
