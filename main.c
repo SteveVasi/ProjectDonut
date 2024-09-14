@@ -3,12 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "matrix.h"
-#include "z_buffer.h"
-
+#include "math/matrix.h"
+#include "buffer.h"
+#include "screen.h"
+#include "math/vector3.h"
 
 int main() {
-
     // a circle of radius R1 centered at R2
     const float R1 = 1;
     const float R2 = 1;
@@ -16,43 +16,33 @@ int main() {
     // distance from the viewer to donut
     const float K2 = 10;
 
-    const int THETA_SPACING = 4;
-    const int PHI_SPACING = 1;
-    const int ROTATION_SPEED_A = 4;
-    const int ROTATION_SPEED_B = 2;
 
-    static const int SCREEN_WIDTH = 15 * 3;  // x
+    static const int SCREEN_WIDTH = 15 * 3; // x
     static const int SCREEN_HEIGHT = 15; // y
+    vector2_int screen_dimensions = {.x = SCREEN_WIDTH, .y = SCREEN_HEIGHT};
 
     // distance from eye to screen aka z'
-    const float K1 = ((float) SCREEN_WIDTH) * K2 * 3.0f / (8.0f * (R1 + R2));
+    const float K1 = ((float) screen_dimensions.x) * K2 * 3.0f / (8.0f * (R1 + R2));
 
     // rotation
     int A = 55;
     int B = 55;
 
 
+    screen screen = create_screen(screen_dimensions);
+
     // reciprocal z buffer (z⁽⁻¹⁾)
     // 0 means infinitely far away
-    float **z_buff = (float **) malloc(SCREEN_HEIGHT * sizeof(float *));
-    char **out_buff = (char **) malloc(SCREEN_HEIGHT * sizeof(char *));
-
-    z_buffer zBuffer = initialize_buffer(SCREEN_WIDTH, SCREEN_HEIGHT);
-
-    for (int i = 0; i < SCREEN_HEIGHT; ++i) {
-        z_buff[i] = (float *) malloc(SCREEN_WIDTH * sizeof(float));
-        out_buff[i] = (char *) malloc(SCREEN_WIDTH * sizeof(char));
-        memset(z_buff[i], 0, SCREEN_WIDTH * sizeof(float));
-        memset(out_buff[i], ' ', SCREEN_WIDTH * sizeof(char));
-    }
 
 
     while (1) {
+        const int THETA_SPACING = 4;
+        const int PHI_SPACING = 1;
+        const int ROTATION_SPEED_A = 4;
+        const int ROTATION_SPEED_B = 2;
 
-        for (int i = 0; i < SCREEN_HEIGHT; ++i) {
-            memset(z_buff[i], 0, SCREEN_WIDTH * sizeof(float));
-            memset(out_buff[i], ' ', SCREEN_WIDTH * sizeof(char));
-        }
+        resetScreen(&screen);
+
 
         A += ROTATION_SPEED_A;
         B += ROTATION_SPEED_B;
@@ -63,12 +53,16 @@ int main() {
             float theta = (float) _t;
 
 
-            float circleX = R2 + R1 * cosf(theta);
-            float circleY = R1 * sinf(theta);
+            vector3_f circle = {
+                .x = R2 + R1 * cosf(theta),
+                .y = R1 * sinf(theta),
+                .z = 0.0f
+            };
 
             matrix4x4 torus = create_zero_matrix();
-            torus.data[0][0] = circleX;
-            torus.data[0][1] = circleY;
+            // TODO make a function instead of direct access of members
+            torus.data[0][0] = circle.x;
+            torus.data[0][1] = circle.y;
 
             for (int _p = 0; _p < 360; _p += PHI_SPACING) {
                 float phi = (float) _p;
@@ -80,15 +74,17 @@ int main() {
                 matrix4x4 rotator = rotate(A % 360, phi, B % 360);
                 matrix4x4 xyz = m_times_n(&torus, &rotator);
 
-                float x = xyz.data[0][0];
-                float y = xyz.data[0][1];
-                float z = xyz.data[0][2];
-                float ooz = 1 / z;
+                vector3_f torusSurface = {
+                    .x = xyz.data[0][0],
+                    .y = xyz.data[0][1],
+                    .z = xyz.data[0][2]
+                };
 
                 // x and y projection
-
-                int xp = (int) ((float)SCREEN_WIDTH / 2 + K1 * ooz * x);
-                int yp = (SCREEN_HEIGHT / 2 - 1 - (int) (K1 * ooz * y));
+                vector2_int projection = {
+                    .x = (int) ((float) screen_dimensions.x / 2 + K1 * torusSurface.x / torusSurface.z),
+                    .y = (int) (screen_dimensions.y / 2 - 1 - (int) (K1 * torusSurface.y / torusSurface.z))
+                };
 
                 // create surface normal
                 matrix4x4 surface_normal = create_zero_matrix();
@@ -97,36 +93,27 @@ int main() {
 
                 // create light and calculate luminance by multiplying it with surface normal
                 matrix4x4 light = create_zero_matrix();
-                // light.data contains plus and minus inverse square root of 2;
+                // light.data is equal to plus and minus inverse square root of 2;
                 light.data[1][0] = 0.70710678118f;
                 light.data[2][0] = -0.70710678118f;
 
-                float luminance = m_times_n(&surface_normal, &light).data[0][0];
-                int isInBounds = xp >= 0 && xp < SCREEN_WIDTH && yp >= 0 && yp < SCREEN_HEIGHT;
-                int isNearest = isInBounds ? (z > z_buff[yp][xp]) : 0;
+                float luminance = getLuminance(&surface_normal, &light);
+                int hasLight = hasLight(&surface_normal, &light);
 
 
-                if (luminance > 0 && isInBounds && isNearest) {
+                vector3_int point = {.x = projection.x, .y = projection.y, .z = torusSurface.z};
+                if (hasLight && isInBounds(&point, &screen) && isClosest(&point, &screen)) {
                     int luminance_index = (int) (10.0f * luminance);
-                    out_buff[yp][xp] = ".,.~:;=!#$@"[luminance_index];
+                    screen.frame_buffer.buffer[projection.y][projection.x] = ".,.~:;=!#$@"[luminance_index];
                 }
-
             }
-
         }
 
         printf("\x1b[H");
-        for (int i = 0; i < SCREEN_HEIGHT; i++) {
-            for (int j = 0; j < SCREEN_WIDTH; j++) {
-                putchar(out_buff[i][j]);
-            }
-            putchar('\n');
-        }
-
+        showScreen(&screen);
 
         sleep(1000);
     }
-
 
 
     // spin the donut around the x and z axes
@@ -137,5 +124,3 @@ int main() {
 
     // ASCII luminance: .,.~:;=!#$@
 }
-
-
