@@ -12,6 +12,7 @@ typedef struct screen_t {
     z_buffer zBuffer;
     frame_buffer frame_buffer;
     vector2_int dimensions;
+    char* pixelValues;
 } screen;
 
 screen create_screen(vector2_int dimensions);

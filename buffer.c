@@ -18,6 +18,11 @@ z_buffer initialize_zBuffer(vector2_int dimensions) {
 
     for (int i = 0; i < height; ++i) {
         buffer.buffer[i] = (float *) malloc(width * sizeof(float));
+        if (!buffer.buffer[i]) {
+            printf("Error allocating memory for buffer\n");
+            exit(1);
+        }
+        1
         memset(buffer.buffer[i], 0, width * sizeof(float));
     }
 
@@ -31,11 +36,15 @@ frame_buffer initialize_frameBuffer(vector2_int dimensions) {
     int height = dimensions.x;
     int width = dimensions.y;
 
-    buffer.buffer = (char **) malloc(height * sizeof(float *));;
+    buffer.buffer = (char **) malloc(height * sizeof(char *));;
 
     for (int i = 0; i < height; ++i) {
-        buffer.buffer[i] = (char *) malloc(width * sizeof(float));
-        memset(buffer.buffer[i], 0, width * sizeof(float));
+        buffer.buffer[i] = (char *) malloc(width * sizeof(char));
+        if (!buffer.buffer[i]) {
+            printf("Error allocating memory for buffer\n");
+            exit(1);
+        }
+        memset(buffer.buffer[i], ' ', width * sizeof(char));
     }
 
     return buffer;
@@ -49,7 +58,7 @@ void reset_zBuffer(z_buffer *zBuffer, float value) {
 
 void reset_frameBuffer(frame_buffer *frameBuffer) {
     for (int i = 0; i < frameBuffer->dimensions.x; ++i) {
-        memset(frameBuffer->buffer[i], ' ', frameBuffer->dimensions.x * sizeof(char));
+        memset(frameBuffer->buffer[i], ' ', frameBuffer->dimensions.y * sizeof(char));
     }
 }
 

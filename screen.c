@@ -5,6 +5,10 @@
 #include "math/vector3.h"
 #include "math/vector2.h"
 
+char* getPixelValues() {
+    return ".,.~:;=!#$@";
+}
+
 screen create_screen(vector2_int dimensions) {
     screen screen;
 
@@ -13,6 +17,7 @@ screen create_screen(vector2_int dimensions) {
     // reciprocal z buffer (z⁽⁻¹⁾)
     // 0 means infinitely far away
     screen.frame_buffer = initialize_frameBuffer(dimensions);
+    screen.pixelValues = getPixelValues();
 
     return screen;
 }

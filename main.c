@@ -53,16 +53,15 @@ int main() {
             float theta = (float) _t;
 
 
-            vector3_f circle = {
+            vector3_f circle_v = {
                 .x = R2 + R1 * cosf(theta),
                 .y = R1 * sinf(theta),
                 .z = 0.0f
             };
 
-            matrix4x4 torus = create_zero_matrix();
-            // TODO make a function instead of direct access of members
-            torus.data[0][0] = circle.x;
-            torus.data[0][1] = circle.y;
+            matrix4x4 circle = create_zero_matrix();
+            circle.data[0][0] = circle_v.x;
+            circle.data[0][1] = circle_v.y;
 
             for (int _p = 0; _p < 360; _p += PHI_SPACING) {
                 float phi = (float) _p;
@@ -72,7 +71,7 @@ int main() {
                 // rotate x-axis by A degrees
                 // rotate y-axis by B degrees
                 matrix4x4 rotator = rotate(A % 360, phi, B % 360);
-                matrix4x4 xyz = m_times_n(&torus, &rotator);
+                matrix4x4 xyz = m_times_n(&circle, &rotator);
 
                 vector3_f torusSurface = {
                     .x = xyz.data[0][0],
@@ -83,7 +82,7 @@ int main() {
                 // x and y projection
                 vector2_int projection = {
                     .x = (int) ((float) screen_dimensions.x / 2 + K1 * torusSurface.x / torusSurface.z),
-                    .y = (int) (screen_dimensions.y / 2 - 1 - (int) (K1 * torusSurface.y / torusSurface.z))
+                    .y = (int) ((float) screen_dimensions.y / 2 - 1 - (int) (K1 * torusSurface.y / torusSurface.z))
                 };
 
                 // create surface normal
@@ -98,11 +97,10 @@ int main() {
                 light.data[2][0] = -0.70710678118f;
 
                 float luminance = getLuminance(&surface_normal, &light);
-                int hasLightInScene = hasLight(&surface_normal, &light);
 
 
                 vector3_int point = {.x = projection.x, .y = projection.y, .z = torusSurface.z};
-                if (hasLightInScene && isInBounds(&point, &screen) && isClosest(&point, &screen)) {
+                if (hasLight(&surface_normal, & light) && isClosest(&point, &screen)) {
                     int luminance_index = (int) (10.0f * luminance);
                     screen.frame_buffer.buffer[projection.y][projection.x] = ".,.~:;=!#$@"[luminance_index];
                 }
