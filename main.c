@@ -7,6 +7,7 @@
 #include "buffer.h"
 #include "screen.h"
 #include "math/vector3.h"
+#include "objects.h"
 
 int main() {
     // a circle of radius R1 centered at R2
@@ -91,6 +92,7 @@ int main() {
                 surface_normal.data[0][1] = sinf(theta);
 
                 // create light and calculate luminance by multiplying it with surface normal
+                vector3_f light_new = create_light(create_vector3_f(0, 1, -1));
                 matrix4x4 light = create_zero_matrix();
                 // light.data is equal to plus and minus inverse square root of 2;
                 light.data[1][0] = 0.70710678118f;
@@ -100,7 +102,7 @@ int main() {
 
 
                 vector3_int point = {.x = projection.x, .y = projection.y, .z = torusSurface.z};
-                if (hasLight(&surface_normal, & light) && isClosest(&point, &screen)) {
+                if (hasLight(&surface_normal, &light) && isClosest(&point, &screen)) {
                     int luminance_index = (int) (10.0f * luminance);
                     screen.frame_buffer.buffer[projection.y][projection.x] = ".,.~:;=!#$@"[luminance_index];
                 }
