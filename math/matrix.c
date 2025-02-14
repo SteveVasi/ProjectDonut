@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include "vector2.h"
 
 
 // additive identity
@@ -59,6 +60,12 @@ matrix4x4 m_times_n(matrix4x4 *m, matrix4x4 *n) {
     return helper;
 }
 
+matrix4x4 m_times_n(vector2_f *m, matrix4x4 *n) {
+    matrix4x4 helper = create_zero_matrix();
+    helper.data[0][0] = m->x;
+    helper.data[0][1] = m->y;
+    return m_times_n(&helper, n);
+}
 
 matrix4x4 m_plus_n(matrix4x4* m, matrix4x4* n){
     // TODO: implement

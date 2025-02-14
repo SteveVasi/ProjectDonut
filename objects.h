@@ -6,9 +6,6 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-
-#define light vector3_f
-
 typedef struct torus_t {
     // draw a 2D circle around some point in 3D space, 
     // and then rotate it around the central axis of the torus
@@ -18,7 +15,7 @@ typedef struct torus_t {
 
 
 
-light create_light(vector3_f direction);
+vector3_f create_light(vector3_f direction);
 vector2_f create_circle(vector2_f point);
 torus create_torus(vector2_f circle, vector3_f position);
 

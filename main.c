@@ -56,22 +56,18 @@ int main() {
             vector2_f torus_circle;
             torus_circle.x = R2 + R1 * cosf(theta);
             torus_circle.y = R1 * sinf(theta);
-            torus torus = create_torus(torus_circle, );
-
-
-            matrix4x4 circle = create_zero_matrix();
-            circle.data[0][0] = torus_circle.x;
-            circle.data[0][1] = torus_circle.y;
-
+            
+            
             for (int _p = 0; _p < 360; _p += PHI_SPACING) {
                 float phi = (float) _p;
-
+                
+                //torus torus = create_torus(torus_circle, );
 
                 // rotate circle around the y-axis and
                 // rotate x-axis by A degrees
                 // rotate y-axis by B degrees
                 matrix4x4 rotator = rotate(A % 360, phi, B % 360);
-                matrix4x4 xyz = m_times_n(&circle, &rotator);
+                matrix4x4 xyz = m_times_n(&torus_circle, &rotator);
 
                 vector3_f torusSurface = {
                     .x = xyz.data[0][0],
