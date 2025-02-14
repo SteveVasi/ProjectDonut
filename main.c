@@ -53,16 +53,15 @@ int main() {
         for (int _t = 0; _t < 360; _t += THETA_SPACING) {
             float theta = (float) _t;
 
+            vector2_f torus_circle;
+            torus_circle.x = R2 + R1 * cosf(theta);
+            torus_circle.y = R1 * sinf(theta);
+            torus torus = create_torus(torus_circle, );
 
-            vector3_f circle_v = {
-                .x = R2 + R1 * cosf(theta),
-                .y = R1 * sinf(theta),
-                .z = 0.0f
-            };
 
             matrix4x4 circle = create_zero_matrix();
-            circle.data[0][0] = circle_v.x;
-            circle.data[0][1] = circle_v.y;
+            circle.data[0][0] = torus_circle.x;
+            circle.data[0][1] = torus_circle.y;
 
             for (int _p = 0; _p < 360; _p += PHI_SPACING) {
                 float phi = (float) _p;
@@ -104,7 +103,7 @@ int main() {
                 vector3_int point = {.x = projection.x, .y = projection.y, .z = torusSurface.z};
                 if (hasLight(&surface_normal, &light) && isClosest(&point, &screen)) {
                     int luminance_index = (int) (10.0f * luminance);
-                    screen.frame_buffer.buffer[projection.y][projection.x] = ".,.~:;=!#$@"[luminance_index];
+                    screen.frame_buffer.buffer[projection.y][projection.x] = screen.pixelValues[luminance_index];
                 }
             }
         }
