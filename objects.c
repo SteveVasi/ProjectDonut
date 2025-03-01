@@ -9,3 +9,4 @@ vector3_f create_light(vector3_f direction){
 torus create_torus(vector2_f circle, vector3_f position){
     
 }
+

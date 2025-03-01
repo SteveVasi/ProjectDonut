@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "math/matrix.h"
 #include "buffer.h"
 #include "screen.h"
+#include "math/matrix.h"
 #include "math/vector3.h"
 #include "objects.h"
 
@@ -67,7 +67,7 @@ int main() {
                 // rotate x-axis by A degrees
                 // rotate y-axis by B degrees
                 matrix4x4 rotator = rotate(A % 360, phi, B % 360);
-                matrix4x4 xyz = m_times_n(&torus_circle, &rotator);
+                matrix4x4 xyz = v2_times_n(&torus_circle, &rotator);
 
                 vector3_f torusSurface = {
                     .x = xyz.data[0][0],

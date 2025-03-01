@@ -60,7 +60,7 @@ matrix4x4 m_times_n(matrix4x4 *m, matrix4x4 *n) {
     return helper;
 }
 
-matrix4x4 m_times_n(vector2_f *m, matrix4x4 *n) {
+matrix4x4 v2_times_n(vector2_f *m, matrix4x4 *n) {
     matrix4x4 helper = create_zero_matrix();
     helper.data[0][0] = m->x;
     helper.data[0][1] = m->y;

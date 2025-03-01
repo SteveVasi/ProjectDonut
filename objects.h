@@ -13,6 +13,7 @@ typedef struct torus_t {
     vector2_f circle;
 } torus;
 
+typedef vector2_f circle;
 
 
 vector3_f create_light(vector3_f direction);
