@@ -1,6 +1,6 @@
 #include "screen.h"
 #include <stdio.h>
-
+#include "objects.h"
 #include "math/matrix.h"
 #include "math/vector3.h"
 #include "math/vector2.h"
@@ -42,12 +42,13 @@ int isInBounds(vector3_int *point, screen *screen) {
 int isClosest(vector3_int *point, screen *screen) {
     return point->z > screen->zBuffer.buffer[point->x][point->y];
 }
-float getLuminance(matrix4x4 *surface_normal, matrix4x4 *light) {
-    return m_times_n(surface_normal, light).data[0][0];
+float getLuminance(matrix4x4 *surface_normal, light *l) {
+    matrix4x4 light_matrix = v3f_to_matrix(l);
+    return m_times_n(surface_normal, l).data[0][0];
 }
 
-int hasLight(matrix4x4 *surface_normal, matrix4x4 *light) {
-    return getLuminance(surface_normal, light) > 0;
+int hasLight(matrix4x4 *surface_normal, light *l) {
+    return getLuminance(surface_normal, l) > 0;
 }
 
 void printCharBuffer(screen *screen) {

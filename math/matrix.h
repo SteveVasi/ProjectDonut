@@ -1,3 +1,5 @@
+#include "vector2.h"
+#include "vector3.h"
 
 #ifndef DONUT_MATRIX_H
 #define DONUT_MATRIX_H
@@ -18,6 +20,8 @@ matrix4x4 rotate_z(float degree);
 matrix4x4 m_times_n(matrix4x4 *m, matrix4x4 *n);
 matrix4x4 v2_times_n(vector2_f *m, matrix4x4 *n);
 matrix4x4 m_plus_n(matrix4x4 *m, matrix4x4 *n);
+matrix4x4 v2f_to_matrix(vector2_f v); // not used yet
+matrix4x4 v3f_to_matrix(vector3_f v);
 
 
 void print_matrix(matrix4x4* matrix);
