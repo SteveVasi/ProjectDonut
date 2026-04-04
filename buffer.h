@@ -1,9 +1,10 @@
 #pragma once
 
-#include "math/vector2.h"
 
 #ifndef DONUT_Z_BUFFER_H
 #define DONUT_Z_BUFFER_H
+
+#include "math/vector2.h"
 
 typedef struct z_buffer_t {
     vector2_int dimensions;

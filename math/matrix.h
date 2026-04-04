@@ -1,8 +1,8 @@
-#include "vector2.h"
-#include "vector3.h"
-
 #ifndef DONUT_MATRIX_H
 #define DONUT_MATRIX_H
+
+#include "vector2.h"
+#include "vector3.h"
 
 typedef struct matrix4x4_t {
     // 3x3 homogeneous coordinates
