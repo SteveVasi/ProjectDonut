@@ -13,10 +13,10 @@ typedef struct matrix4x4_t {
 // no side effects
 matrix4x4 create_identity();
 matrix4x4 create_zero_matrix();
-matrix4x4 rotate(float x_degree, float y_degree, float z_degree);
-matrix4x4 rotate_x(float degree);
-matrix4x4 rotate_y(float degree);
-matrix4x4 rotate_z(float degree);
+matrix4x4 rotate(float x_rad, float y_rad, float z_rad);
+matrix4x4 rotate_x(float rad);
+matrix4x4 rotate_y(float rad);
+matrix4x4 rotate_z(float rad);
 matrix4x4 m_times_n(matrix4x4 *m, matrix4x4 *n);
 matrix4x4 v2_times_n(vector2_f *m, matrix4x4 *n);
 matrix4x4 v2f_to_matrix(vector2_f v); // not used yet

@@ -35,13 +35,12 @@ int main() {
     // reciprocal z buffer (z⁽⁻¹⁾)
     // 0 means infinitely far away
 
+    const float THETA_SPACING = 4 * M_PI / 180.0f;
+    const float PHI_SPACING = 1 * M_PI / 180.0f;
+    const float ROTATION_SPEED_A = 4 * M_PI / 180.0f;
+    const float ROTATION_SPEED_B = 2 * M_PI / 180.0f;
 
     while (1) {
-        const int THETA_SPACING = 4;
-        const int PHI_SPACING = 1;
-        const int ROTATION_SPEED_A = 4;
-        const int ROTATION_SPEED_B = 2;
-
         resetScreen(&screen);
 
 
@@ -50,17 +49,15 @@ int main() {
 
         // create a donut using rotations. radius -> circle -> donut
 
-        for (int _t = 0; _t < 360; _t += THETA_SPACING) {
-            float theta = (float) _t;
+        for (float theta = 0; theta < M_PI * 2; theta += THETA_SPACING) {
 
             vector2_f torus_circle;
             torus_circle.x = R2 + R1 * cosf(theta);
             torus_circle.y = R1 * sinf(theta);
             
             
-            for (int _p = 0; _p < 360; _p += PHI_SPACING) {
-                float phi = (float) _p;
-                
+            for (float phi = 0; phi < M_PI * 2; phi += PHI_SPACING) {
+
                 //torus torus = create_torus(torus_circle, );
 
                 // rotate circle around the y-axis and

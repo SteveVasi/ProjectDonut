@@ -70,43 +70,43 @@ matrix4x4 v2_times_n(vector2_f *m, matrix4x4 *n) {
 
 // transformational matrices
 
-matrix4x4 rotate_x(float degree) {
+matrix4x4 rotate_x(float rad) {
     matrix4x4 rotational = create_identity();
 
-    rotational.data[1][1] = cosf(degree);
-    rotational.data[1][2] = -sinf(degree);
-    rotational.data[2][1] = sinf(degree);
-    rotational.data[2][2] = cosf(degree);
+    rotational.data[1][1] = cosf(rad);
+    rotational.data[1][2] = -sinf(rad);
+    rotational.data[2][1] = sinf(rad);
+    rotational.data[2][2] = cosf(rad);
 
     return rotational;
 }
 
-matrix4x4 rotate_y(float degree) {
+matrix4x4 rotate_y(float rad) {
     matrix4x4 rotational = create_identity();
 
-    rotational.data[0][0] = cosf(degree);
-    rotational.data[0][2] = -sinf(degree);
-    rotational.data[2][1] = sinf(degree);
-    rotational.data[2][2] = cosf(degree);
+    rotational.data[0][0] = cosf(rad);
+    rotational.data[0][2] = -sinf(rad);
+    rotational.data[2][1] = sinf(rad);
+    rotational.data[2][2] = cosf(rad);
 
     return rotational;
 }
 
-matrix4x4 rotate_z(float degree) {
+matrix4x4 rotate_z(float rad) {
     matrix4x4 rotational = create_identity();
 
-    rotational.data[0][0] = cosf(degree);
-    rotational.data[0][1] = -sinf(degree);
-    rotational.data[1][0] = sinf(degree);
-    rotational.data[1][1] = cosf(degree);
+    rotational.data[0][0] = cosf(rad);
+    rotational.data[0][1] = -sinf(rad);
+    rotational.data[1][0] = sinf(rad);
+    rotational.data[1][1] = cosf(rad);
 
     return rotational;
 }
 
-matrix4x4 rotate(float x_degree, float y_degree, float z_degree){
-    matrix4x4 x_rotator = rotate_x(x_degree);
-    matrix4x4 y_rotator = rotate_y(y_degree);
-    matrix4x4 z_rotator = rotate_z(z_degree);
+matrix4x4 rotate(float x_rad, float y_rad, float z_rad){
+    matrix4x4 x_rotator = rotate_x(x_rad);
+    matrix4x4 y_rotator = rotate_y(y_rad);
+    matrix4x4 z_rotator = rotate_z(z_rad);
     matrix4x4 xy_rotator = m_times_n(&x_rotator, &y_rotator);
     matrix4x4 xyz_rotator = m_times_n(&xy_rotator, &z_rotator);
 
