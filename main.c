@@ -103,7 +103,7 @@ int main() {
         printf("\x1b[H");
         showScreen(&screen);
 
-        sleep(1000);
+        sleep(1);
     }
 
 

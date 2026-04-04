@@ -67,10 +67,6 @@ matrix4x4 v2_times_n(vector2_f *m, matrix4x4 *n) {
     return m_times_n(&helper, n);
 }
 
-matrix4x4 m_plus_n(matrix4x4* m, matrix4x4* n){
-    // TODO: implement
-}
-
 
 // transformational matrices
 
@@ -138,3 +134,11 @@ matrix4x4 scale(matrix4x4 *matrix4X4, float x, float y, float z) {
     return scaler;
 }
 
+matrix4x4 v3f_to_row_matrix(vector3_f v) {
+    matrix4x4 m = create_zero_matrix();
+    m.data[0][0] = v.x;
+    m.data[0][1] = v.y;
+    m.data[0][2] = v.z;
+    m.data[0][3] = 1.0f;
+    return m;
+}
