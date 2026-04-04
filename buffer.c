@@ -3,6 +3,7 @@
 #include "buffer.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "math/vector2.h"
 
@@ -22,7 +23,6 @@ z_buffer initialize_zBuffer(vector2_int dimensions) {
             printf("Error allocating memory for buffer\n");
             exit(1);
         }
-        1
         memset(buffer.buffer[i], 0, width * sizeof(float));
     }
 
@@ -52,7 +52,7 @@ frame_buffer initialize_frameBuffer(vector2_int dimensions) {
 
 void reset_zBuffer(z_buffer *zBuffer, float value) {
     for (int i = 0; i < zBuffer->dimensions.x; ++i) {
-        memset(zBuffer->buffer[i], value, zBuffer->dimensions.x * sizeof(float));
+        memset(zBuffer->buffer[i], value, zBuffer->dimensions.y * sizeof(float));
     }
 }
 

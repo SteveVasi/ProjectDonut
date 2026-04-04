@@ -40,7 +40,7 @@ int isInBounds(vector3_int *point, screen *screen) {
  * @return int bool
  */
 int isClosest(vector3_int *point, screen *screen) {
-    return point->z > screen->zBuffer.buffer[point->x][point->y];
+    return point->z > screen->zBuffer.buffer[point->y][point->z];
 }
 float getLuminance(matrix4x4 *surface_normal, light *l) {
     matrix4x4 light_matrix = v3f_to_matrix(l);
