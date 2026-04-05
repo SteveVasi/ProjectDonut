@@ -18,7 +18,7 @@ typedef vector3_f light;
 
 vector3_f create_light(vector3_f direction);
 vector2_f create_circle(vector2_f point);
-torus create_torus(vector2_f circle, vector3_f position);
+torus create_torus(vector2_f circle, vector3_f axis);
 
 
 #endif

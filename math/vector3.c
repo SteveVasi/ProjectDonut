@@ -6,7 +6,7 @@ vector3_f create_zero_vector(){
 };
 
 float getLength(vector3_f v){
-    return sqrtf( v.x + v.y + v.z);
+    return sqrtf( v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
 vector3_f multiply(vector3_f vector, float factor){
@@ -31,4 +31,8 @@ vector3_f create_vector3_f(float x, float y, float z){
     v.y = y;
     v.z = z;
     return v;
+}
+
+float dot(vector3_f *v1, vector3_f *v2) {
+    return v1->x * v2->x + v1->y * v2->y + v1->z * v2->z;
 }

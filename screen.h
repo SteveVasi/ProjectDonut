@@ -1,11 +1,11 @@
+#ifndef SCREEN_H
+#define SCREEN_H
+
 #include "buffer.h"
 #include "objects.h"
 #include "math/matrix.h"
 #include "math/vector2.h"
 #include "math/vector3.h"
-
-#ifndef SCREEN_H
-#define SCREEN_H
 
 typedef struct screen_t {
     z_buffer zBuffer;
@@ -15,14 +15,14 @@ typedef struct screen_t {
 } screen;
 
 screen create_screen(vector2_int dimensions);
-int isInBounds(vector3_int *point, screen *screen);
-int isClosest(vector3_int *point, screen *screen);
-void showScreen(screen *screen);
+int isInBounds(vector3_f *point, screen *screen);
+int isClosest(vector3_f *point, screen *screen);
+void printScreen(screen *screen);
 void resetScreen(screen *screen);
-float getLuminance(matrix4x4 *surface_normal, vector3_f *light);
-int hasLight(matrix4x4 *surface_normal, vector3_f *light);
+float getLuminance(vector3_f *surface_normal, vector3_f *light);
+int hasLight(vector3_f *surface_normal, vector3_f *light);
 
-inline int isVisible(vector3_int *point, screen *screen) {
+inline int isVisible(vector3_f *point, screen *screen) {
     return isInBounds(point, screen) && isClosest(point, screen);
 }
 

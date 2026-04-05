@@ -86,7 +86,7 @@ matrix4x4 rotate_y(float rad) {
 
     rotational.data[0][0] = cosf(rad);
     rotational.data[0][2] = -sinf(rad);
-    rotational.data[2][1] = sinf(rad);
+    rotational.data[2][0] = sinf(rad);
     rotational.data[2][2] = cosf(rad);
 
     return rotational;
@@ -141,4 +141,12 @@ matrix4x4 v3f_to_row_matrix(vector3_f v) {
     m.data[0][2] = v.z;
     m.data[0][3] = 1.0f;
     return m;
+}
+
+vector3_f vector3_times_matrix(vector3_f *v, matrix4x4 *m) {
+    vector3_f result;
+    result.x = v->x * m->data[0][0] + v->y * m->data[1][0] + v->z * m->data[2][0];
+    result.y = v->x * m->data[0][1] + v->y * m->data[1][1] + v->z * m->data[2][1];
+    result.z = v->x * m->data[0][2] + v->y * m->data[1][2] + v->z * m->data[2][2];
+    return result;
 }

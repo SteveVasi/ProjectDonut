@@ -18,16 +18,16 @@ int main() {
     const float K2 = 10;
 
 
-    static const int SCREEN_WIDTH = 15 * 3; // x
-    static const int SCREEN_HEIGHT = 15; // y
-    vector2_int screen_dimensions = {.x = SCREEN_WIDTH, .y = SCREEN_HEIGHT};
+    static const int SCREEN_WIDTH = 80; // x
+    static const int SCREEN_HEIGHT = 22; // y
+    vector2_int screen_dimensions = {.x = SCREEN_HEIGHT, .y = SCREEN_WIDTH};
 
     // distance from eye to screen aka z'
-    const float K1 = ((float) screen_dimensions.x) * K2 * 3.0f / (8.0f * (R1 + R2));
+    const float K1 = ((float) screen_dimensions.y) * K2 * 3.0f / (8.0f * (R1 + R2));
 
     // rotation
-    int A = 55;
-    int B = 55;
+    float x_rotation = 0.0f;
+    float y_rotation = 0.0f;
 
 
     screen screen = create_screen(screen_dimensions);
@@ -37,34 +37,36 @@ int main() {
 
     const float THETA_SPACING = 4 * M_PI / 180.0f;
     const float PHI_SPACING = 1 * M_PI / 180.0f;
-    const float ROTATION_SPEED_A = 4 * M_PI / 180.0f;
-    const float ROTATION_SPEED_B = 2 * M_PI / 180.0f;
+    const float ROTATION_SPEED_X = 4 * M_PI / 180.0f;
+    const float ROTATION_SPEED_Y = 2 * M_PI / 180.0f;
 
     while (1) {
         resetScreen(&screen);
 
 
-        A += ROTATION_SPEED_A;
-        B += ROTATION_SPEED_B;
+        x_rotation += ROTATION_SPEED_X;
+        y_rotation += ROTATION_SPEED_Y;
 
         // create a donut using rotations. radius -> circle -> donut
 
         for (float theta = 0; theta < M_PI * 2; theta += THETA_SPACING) {
 
-            vector2_f torus_circle;
-            torus_circle.x = R2 + R1 * cosf(theta);
-            torus_circle.y = R1 * sinf(theta);
-            
-            
+            // we draw the circle by rotating around the angle theta
+            vector2_f torus_circle = {
+            R2 + R1 * cosf(theta),
+            R1 * sinf(theta)
+            };
+
             for (float phi = 0; phi < M_PI * 2; phi += PHI_SPACING) {
 
-                //torus torus = create_torus(torus_circle, );
+                // we draw the torus by rotating the circle around the angle phi
+                torus torus = create_torus(torus_circle, (vector3_f){0, 0, 0});
 
                 // rotate circle around the y-axis and
                 // rotate x-axis by A degrees
                 // rotate y-axis by B degrees
-                matrix4x4 rotator = rotate(A % 360, phi, B % 360);
-                matrix4x4 xyz = v2_times_n(&torus_circle, &rotator);
+                matrix4x4 rotator = rotate(x_rotation, phi, y_rotation);
+                matrix4x4 xyz = v2_times_n(&torus.circle, &rotator);
 
                 vector3_f torusSurface = {
                     .x = xyz.data[0][0],
@@ -74,14 +76,17 @@ int main() {
 
                 // x and y projection
                 vector2_int projection = {
-                    .x = (int) ((float) screen_dimensions.x / 2 + K1 * torusSurface.x / torusSurface.z),
-                    .y = (int) ((float) screen_dimensions.y / 2 - 1 - (int) (K1 * torusSurface.y / torusSurface.z))
+                    .x = (int) ((float) screen_dimensions.x / 2 + K1 * torusSurface.x / (torusSurface.z + K2)),
+                    .y = (int) ((float) screen_dimensions.y / 2 + K1 * torusSurface.y / (torusSurface.z + K2))
                 };
 
                 // create surface normal
-                matrix4x4 surface_normal = create_zero_matrix();
-                surface_normal.data[0][0] = cosf(theta);
-                surface_normal.data[0][1] = sinf(theta);
+                vector3_f surface_normal = {
+                    .x = cosf(theta),
+                    .y = sinf(theta),
+                    .z = 0
+                };
+                surface_normal = vector3_times_matrix(&surface_normal, &rotator);
 
                 // create light and calculate luminance by multiplying it with surface normal
                 vector3_f light = create_light(create_vector3_f(0, 1, -1));
@@ -89,18 +94,22 @@ int main() {
                 float luminance = getLuminance(&surface_normal, &light);
 
 
-                vector3_int point = {.x = projection.x, .y = projection.y, .z = torusSurface.z};
-                if (hasLight(&surface_normal, &light) && isClosest(&point, &screen)) {
+                vector3_f point = {.x = projection.x, .y = projection.y, .z = torusSurface.z};
+                if (
+                    isInBounds(&point, &screen) &&
+                    hasLight(&surface_normal, &light) &&
+                    isClosest(&point, &screen)
+                    ) {
                     int luminance_index = (int) (10.0f * luminance);
-                    screen.frame_buffer.buffer[projection.y][projection.x] = screen.pixelValues[luminance_index];
+                    screen.frame_buffer.buffer[projection.x][projection.y] = screen.pixelValues[luminance_index];
+                    screen.zBuffer.buffer[projection.x][projection.y] = point.z;
                 }
             }
         }
 
-        printf("\x1b[H");
-        showScreen(&screen);
+        printScreen(&screen);
 
-        sleep(1);
+        //sleep(1);
     }
 
 

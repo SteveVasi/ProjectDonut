@@ -20,5 +20,6 @@ typedef struct vector3_int_t {
 vector3_f create_zero_vector();
 vector3_f normalize(vector3_f v);
 vector3_f create_vector3_f(float x, float y, float z);
+float dot(vector3_f *v1, vector3_f *v2);
 
 #endif //VECTOR3_H

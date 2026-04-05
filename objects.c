@@ -6,7 +6,10 @@ vector3_f create_light(vector3_f direction){
     return normalize(direction);
 }
 
-torus create_torus(vector2_f circle, vector3_f position){
-    
+torus create_torus(vector2_f circle, vector3_f axis){
+    torus t;
+    t.circle = circle;
+    t.axis = axis;
+    return t;
 }
 
